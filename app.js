@@ -31,18 +31,22 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     const chatId = msg.chat.id;
     const message = msg.text;
     if (message === '/start') {
-        yield bot.sendMessage(chatId, '', {
-            reply_markup: {
-                keyboard: [[{ text: 'заполнить форму', web_app: { url: webAppForm } }]],
-            },
-        });
-        yield bot.sendMessage(chatId, 'заказать пиццу', {
+        yield bot.sendMessage(chatId, 'чтобы заказать пицце, нажмите на кнопку "перейти в магазин"', {
             reply_markup: {
                 inline_keyboard: [
                     [{ text: 'перейти в магазин', web_app: { url: webApp } }],
                 ],
             },
         });
+        setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
+            yield bot.sendMessage(chatId, 'чтобы завершить заказ, нажмите "заполнить форму"', {
+                reply_markup: {
+                    keyboard: [
+                        [{ text: 'зваполнить форму', web_app: { url: webAppForm } }],
+                    ],
+                },
+            });
+        }), 2000);
     }
     if ((_a = msg === null || msg === void 0 ? void 0 : msg.web_app_data) === null || _a === void 0 ? void 0 : _a.data) {
         const data = JSON.parse((_b = msg === null || msg === void 0 ? void 0 : msg.web_app_data) === null || _b === void 0 ? void 0 : _b.data);
