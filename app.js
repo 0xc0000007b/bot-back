@@ -31,7 +31,7 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     const chatId = msg.chat.id;
     const message = msg.text;
     if (message === '/start') {
-        yield bot.sendMessage(chatId, 'заполните форму', {
+        yield bot.sendMessage(chatId, '', {
             reply_markup: {
                 keyboard: [[{ text: 'заполнить форму', web_app: { url: webAppForm } }]],
             },
