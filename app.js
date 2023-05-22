@@ -36,7 +36,7 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
                 keyboard: [[{ text: 'заполнить форму', web_app: { url: webAppForm } }]],
             },
         });
-        yield bot.sendMessage(chatId, 'Нажми на кнопку ниже, чтобы заполнить форму', {
+        yield bot.sendMessage(chatId, 'заказать пиццу', {
             reply_markup: {
                 inline_keyboard: [
                     [{ text: 'перейти в магазин', web_app: { url: webApp } }],
@@ -46,13 +46,11 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     }
     if ((_a = msg === null || msg === void 0 ? void 0 : msg.web_app_data) === null || _a === void 0 ? void 0 : _a.data) {
         const data = JSON.parse((_b = msg === null || msg === void 0 ? void 0 : msg.web_app_data) === null || _b === void 0 ? void 0 : _b.data);
-        const time = calcTime(data === null || data === void 0 ? void 0 : data.address);
+        const time = yield calcTime(data.address);
         try {
             console.log(data);
-            yield bot.sendMessage(chatId, 'Спасибо за покупку!\nКурьер уже в пути');
-            setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
-                yield bot.sendMessage('Время ожидания заказа: ' + time + ' минут');
-            }), 1000);
+            yield bot.sendMessage(chatId, `Спасибо за покупку ${data.name}\nкурьер уже в пути`);
+            yield bot.sendMessage(chatId, 'Время ожидания заказа: ' + time + ' минут');
         }
         catch (e) {
             console.log(e);
@@ -70,7 +68,7 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}\nВаша покупки:\n${products.map((item) => {
                     pizzaArray.push(item);
                     return `\n🍕  ${item.type}`;
-                })}`,
+                })}, чтобы указать данные и узнать через сколько прибудет ваш заказ, нажмите на кнопку "заполнить форму"`,
             },
         });
         return res.status(200).json(pizzaArray);
