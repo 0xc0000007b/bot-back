@@ -46,12 +46,13 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     }
     if ((_a = msg === null || msg === void 0 ? void 0 : msg.web_app_data) === null || _a === void 0 ? void 0 : _a.data) {
         const data = JSON.parse((_b = msg === null || msg === void 0 ? void 0 : msg.web_app_data) === null || _b === void 0 ? void 0 : _b.data);
+        const time = calcTime(data === null || data === void 0 ? void 0 : data.address);
         try {
             console.log(data);
             yield bot.sendMessage(chatId, 'Спасибо за покупку!\nКурьер уже в пути');
             setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
-                yield bot.sendMessage('Время ожидания заказа: ' + (yield calcTime(data.address)) + ' минут');
-            }));
+                yield bot.sendMessage('Время ожидания заказа: ' + time + ' минут');
+            }), 1000);
         }
         catch (e) {
             console.log(e);
