@@ -42,7 +42,7 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
             yield bot.sendMessage(chatId, 'чтобы завершить заказ, нажмите "заполнить форму"', {
                 reply_markup: {
                     keyboard: [
-                        [{ text: 'зваполнить форму', web_app: { url: webAppForm } }],
+                        [{ text: 'заполнить форму', web_app: { url: webAppForm } }],
                     ],
                 },
             });
@@ -64,17 +64,28 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
 app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { queryId, products = [], totalPrice } = req.body;
     try {
-        yield bot.answerWebAppQuery(queryId, {
-            type: 'article',
-            id: queryId,
-            title: 'Успешная покупка',
-            input_message_content: {
-                message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}\nВаша покупки:\n${products.map((item) => {
-                    pizzaArray.push(item);
-                    return `\n🍕  ${item.type}`;
-                })}, чтобы указать данные и узнать через сколько прибудет ваш заказ, нажмите на кнопку "заполнить форму"`,
-            },
-        });
+        if (totalPrice > 0) {
+            yield bot.answerWebAppQuery(queryId, {
+                type: 'article',
+                id: queryId,
+                title: 'Успешная покупка',
+                input_message_content: {
+                    message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}\nВаши покупки:\n${products.map((item) => {
+                        pizzaArray.push(item);
+                        return `\n🍕  ${item.type}`;
+                    })}, \n\nчтобы указать данные и узнать через сколько прибудет ваш заказ, нажмите на кнопку "заполнить форму"`,
+                },
+            });
+        }
+        else {
+            yield bot.answerWebAppQuery(queryId, {
+                type: 'article',
+                id: queryId,
+                input_message_content: {
+                    message_text: 'Неудалось купить товары, попробуйте снова',
+                },
+            });
+        }
         return res.status(200).json(pizzaArray);
     }
     catch (e) {
