@@ -75,6 +75,11 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                         return `\n🍕  ${item.type}`;
                     })}, \n\nчтобы указать данные и узнать через сколько прибудет ваш заказ,нажмите на кнопку с изображением 4 точек внизу в поле ввода сообщения и  нажмите на кнопку "заполнить форму"`,
                 },
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: 'перейти в магазин', web_app: { url: webApp } }],
+                    ],
+                },
             });
         }
         else {
@@ -106,7 +111,15 @@ const calcTime = (address) => __awaiter(void 0, void 0, void 0, function* () {
         lat: originResponse.data[0].lat,
         lng: originResponse.data[0].lon,
     };
-    const destinationResponse = yield axios_1.default.get(`${baseUrl}/search?format=json&street=${address.toLowerCase()}`);
+    const moscowCoords = { lat: 55.7558, lng: 37.6173 };
+    const boundRadius = 50000;
+    const viewboxCoords = {
+        minLat: moscowCoords.lat - boundRadius / 111300,
+        maxLat: moscowCoords.lat + boundRadius / 111300,
+        minLng: moscowCoords.lng - boundRadius / (111300 * Math.cos(moscowCoords.lat)),
+        maxLng: moscowCoords.lng + boundRadius / (111300 * Math.cos(moscowCoords.lat)),
+    };
+    const destinationResponse = yield axios_1.default.get(`${baseUrl}/search?format=json&street=${address.toLowerCase()}&countrycodes=RUS&viewbox=${viewboxCoords.minLng},${viewboxCoords.minLat},${viewboxCoords.maxLng},${viewboxCoords.maxLat}&bounded=1`);
     if (!destinationResponse.data.length) {
         throw new Error('Неверный адрес доставки');
     }
