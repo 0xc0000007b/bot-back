@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = require("dotenv");
-const axios_1 = __importDefault(require("axios"));
+const ymaps_1 = __importDefault(require("ymaps"));
 const Bot = require('node-telegram-bot-api');
 const express = require('express');
 (0, dotenv_1.config)();
@@ -54,7 +54,13 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             console.log(data);
             yield bot.sendMessage(chatId, `Спасибо за покупку ${data.name}\nкурьер уже в пути`);
-            yield bot.sendMessage(chatId, 'Время ожидания заказа: ' + time + ' минут');
+            yield bot.sendMessage(chatId, 'Время ожидания заказа: ' + time + ' минут', {
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: 'заказать еще', web_app: { url: webApp } }],
+                    ],
+                },
+            });
         }
         catch (e) {
             console.log(e);
@@ -101,47 +107,49 @@ app.get('/pizza', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(200).send(pizzaArray);
 }));
 app.listen(8080, () => console.log(`server started on address http://localhost:8080`));
-const calcTime = (address) => __awaiter(void 0, void 0, void 0, function* () {
-    const origin = 'Новотушинская 5';
-    const baseUrl = 'https://nominatim.openstreetmap.org';
-    const mode = 'driving';
-    const timeToWait = 10;
-    const originResponse = yield axios_1.default.get(`${baseUrl}/search?format=json&q=${origin}`);
-    const originLatLong = {
-        lat: originResponse.data[0].lat,
-        lng: originResponse.data[0].lon,
+const calcTime = (address) => {
+    const origin = 'Новотушинская, 5'; // адрес отправления
+    const geocodeParams = {
+        geocode: address,
+        boundedBy: [
+            [55.089079, 36.364133],
+            [56.054863, 38.119333],
+        ],
     };
-    const moscowCoords = { lat: 55.7558, lng: 37.6173 };
-    const boundRadius = 50000;
-    const viewboxCoords = {
-        minLat: moscowCoords.lat - boundRadius / 111300,
-        maxLat: moscowCoords.lat + boundRadius / 111300,
-        minLng: moscowCoords.lng - boundRadius / (111300 * Math.cos(moscowCoords.lat)),
-        maxLng: moscowCoords.lng + boundRadius / (111300 * Math.cos(moscowCoords.lat)),
-    };
-    const destinationResponse = yield axios_1.default.get(`${baseUrl}/search?format=json&street=${address.toLowerCase()}&countrycodes=RUS&viewbox=${viewboxCoords.minLng},${viewboxCoords.minLat},${viewboxCoords.maxLng},${viewboxCoords.maxLat}&bounded=1`);
-    if (!destinationResponse.data.length) {
-        throw new Error('Неверный адрес доставки');
-    }
-    const destinationLatLng = {
-        lat: destinationResponse.data[0].lat,
-        lng: destinationResponse.data[0].lon,
-    };
-    const routeResponse = yield axios_1.default.get(`https://router.project-osrm.org/route/v1/${mode}/${originLatLong.lng},${originLatLong.lat};${destinationLatLng.lng},${destinationLatLng.lat}?overview=false`);
-    const routeDurationSeconds = routeResponse.data.routes[0].duration;
-    const fixedTimeMinutes = 15;
-    const deliveryTimePerPizzaMinutes = 15;
-    const returnTimeMinutes = 15;
-    const waitingTimeBetweenOrdersMinutes = timeToWait;
-    const totalTimeSeconds = fixedTimeMinutes +
-        (2 * deliveryTimePerPizzaMinutes + 2 * returnTimeMinutes) +
-        waitingTimeBetweenOrdersMinutes +
-        routeDurationSeconds;
-    const hours = Math.floor(totalTimeSeconds / 3600);
-    const minutes = Math.floor((totalTimeSeconds % 3600) / 60);
-    const seconds = Math.floor(totalTimeSeconds % 60);
-    const formattedDuration = `${hours.toString().padStart(2, '0')}:${minutes
-        .toString()
-        .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    return formattedDuration;
-});
+    const originPromise = ymaps_1.default.geocode(origin, { results: 1 }).then((res) => {
+        const originCoords = res.geoObjects.get(0).geometry.getCoordinates();
+        return originCoords;
+    });
+    const destinationPromise = ymaps_1.default.geocode(geocodeParams).then((res) => {
+        const destinationCoords = res.geoObjects.get(0).geometry.getCoordinates();
+        return destinationCoords;
+    });
+    return Promise.all([originPromise, destinationPromise]).then(([originCoords, destinationCoords]) => {
+        const multiRoute = new ymaps_1.default.multiRouter.MultiRoute({
+            referencePoints: [originCoords, destinationCoords],
+            params: {
+                routingMode: 'auto',
+            },
+        }, { routeActiveStrokeWidth: 6 });
+        return multiRoute.model.events
+            .add('requestsuccess', () => {
+            const time = multiRoute.getActiveRoute().properties.get('duration');
+            const durationSeconds = time ? time.value : 0;
+            const fixedTimeMinutes = 15;
+            const deliveryTimePerPizzaMinutes = 15;
+            const returnTimeMinutes = 15;
+            const waitingTimeBetweenOrdersMinutes = 10;
+            const totalTimeSeconds = fixedTimeMinutes * 60 +
+                (2 * deliveryTimePerPizzaMinutes + 2 * returnTimeMinutes) * 60 +
+                waitingTimeBetweenOrdersMinutes * 60 +
+                durationSeconds;
+            const hours = Math.floor(totalTimeSeconds / 3600);
+            const minutes = Math.floor((totalTimeSeconds % 3600) / 60);
+            const seconds = Math.floor(totalTimeSeconds % 60);
+            return `${hours.toString().padStart(2, '0')}:${minutes
+                .toString()
+                .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        })
+            .catch((e) => console.error(e));
+    });
+};
