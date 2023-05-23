@@ -114,7 +114,7 @@ const calcTime = (address) => {
         boundedBy: [
             [55.089079, 36.364133],
             [56.054863, 38.119333],
-        ],
+        ], // прямоугольная область поиска
     };
     const originPromise = ymaps_1.default.geocode(origin, { results: 1 }).then((res) => {
         const originCoords = res.geoObjects.get(0).geometry.getCoordinates();
@@ -134,21 +134,17 @@ const calcTime = (address) => {
         return multiRoute.model.events
             .add('requestsuccess', () => {
             const time = multiRoute.getActiveRoute().properties.get('duration');
-            const durationSeconds = time ? time.value : 0;
-            const fixedTimeMinutes = 15;
-            const deliveryTimePerPizzaMinutes = 15;
-            const returnTimeMinutes = 15;
-            const waitingTimeBetweenOrdersMinutes = 10;
+            const durationSeconds = time ? time.value : 0; // длительность маршрута в секундах
+            const fixedTimeMinutes = 15; // фиксированное время подготовки заказа
+            const deliveryTimePerPizzaMinutes = 15; // время доставки одной пиццы
+            const returnTimeMinutes = 15; // время возврата на базу после доставки пиццы
+            const waitingTimeBetweenOrdersMinutes = 10; // время ожидания между заказами
             const totalTimeSeconds = fixedTimeMinutes * 60 +
                 (2 * deliveryTimePerPizzaMinutes + 2 * returnTimeMinutes) * 60 +
                 waitingTimeBetweenOrdersMinutes * 60 +
                 durationSeconds;
-            const hours = Math.floor(totalTimeSeconds / 3600);
-            const minutes = Math.floor((totalTimeSeconds % 3600) / 60);
-            const seconds = Math.floor(totalTimeSeconds % 60);
-            return `${hours.toString().padStart(2, '0')}:${minutes
-                .toString()
-                .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            const minutes = Math.floor(totalTimeSeconds / 60);
+            return minutes;
         })
             .catch((e) => console.error(e));
     });
