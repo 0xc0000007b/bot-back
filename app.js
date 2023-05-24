@@ -67,7 +67,7 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     }
 }));
 app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { queryId, orders = [], totalPrice } = req.body;
+    const { queryId, products = [], totalPrice } = req.body;
     try {
         if (totalPrice > 0) {
             yield bot.answerWebAppQuery(queryId, {
@@ -75,7 +75,7 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 id: queryId,
                 title: 'Успешная покупка',
                 input_message_content: {
-                    message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}\nВаши покупки:\n${orders.map((item) => {
+                    message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}\nВаши покупки:\n${products.map((item) => {
                         return `\n🍕  ${item.type}`;
                     })}, \n\nчтобы указать данные и узнать через сколько прибудет ваш заказ,нажмите на кнопку с изображением 4 точек внизу в поле ввода сообщения и  нажмите на кнопку "заполнить форму"`,
                 },
