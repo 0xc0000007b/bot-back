@@ -78,7 +78,7 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
             ? '0' + lastUpdateDateTime.getUTCMinutes()
             : lastUpdateDateTime.getUTCMinutes();
         if (totalPrice > 0) {
-            if (+time > 10) {
+            if (+time < 10) {
                 yield bot.answerWebAppQuery(queryId, {
                     type: 'article',
                     id: queryId,
