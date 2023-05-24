@@ -70,15 +70,14 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
 app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { queryId, products = [], totalPrice } = req.body;
     try {
-        const time = bot.getUpdates().then(function (updates) {
-            const lastUpdate = updates[updates.length - 1];
-            const lastUpdateDateTime = new Date(lastUpdate.message.date * 1000);
-            return lastUpdateDateTime.getUTCMinutes() < 10
-                ? '0' + lastUpdateDateTime.getUTCMinutes()
-                : lastUpdateDateTime.getUTCMinutes();
-        });
+        const updates = yield bot.getUpdates();
+        const lastUpdate = updates[updates.length - 1];
+        const lastUpdateDateTime = new Date(lastUpdate.message.date * 1000);
+        const time = lastUpdateDateTime.getUTCMinutes() < 10
+            ? '0' + lastUpdateDateTime.getUTCMinutes()
+            : lastUpdateDateTime.getUTCMinutes();
         if (totalPrice > 0) {
-            if (time > 10) {
+            if (+time > 10) {
                 yield bot.answerWebAppQuery(queryId, {
                     type: 'article',
                     id: queryId,
@@ -97,17 +96,17 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 });
             }
             else {
-                bot.answerWebAppQuery({
+                yield bot.answerWebAppQuery({
                     type: 'article',
                     id: queryId,
                     title: 'Успешная покупка',
                     input_message_content: {
-                        message_text: ` подождите немного, курьер возвращается за вашим заказом... время ожидания ${setTimeout(() => time - 1, 100000)} миут.
+                        message_text: ` подождите немного, курьер возвращается за вашим заказом... время ожидания ${setTimeout(() => +time - 1, 60000)} миут.
             `,
                     },
                 });
             }
-            if (time === 0) {
+            if (+time === 0) {
                 yield bot.answerWebAppQuery(queryId, {
                     type: 'article',
                     id: queryId,
