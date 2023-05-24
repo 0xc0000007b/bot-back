@@ -22,10 +22,10 @@ const token = process.env.TOKEN;
 const bot = new Bot(token, { polling: true });
 const webApp = 'https://web-tg-app.netlify.app';
 const webAppForm = 'https://web-tg-app.netlify.app/form';
-let pizzas = [];
 const app = express();
 app.use(cors());
 app.use(express.json());
+const pizzaArray = [];
 bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     const chatId = msg.chat.id;
@@ -68,8 +68,7 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     }
 }));
 app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { queryId, products = [], totalPrice } = req.body;
-    pizzas = [...products];
+    const { queryId, pizzas = [], totalPrice } = req.body;
     try {
         if (totalPrice > 0) {
             yield bot.answerWebAppQuery(queryId, {
@@ -77,7 +76,8 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 id: queryId,
                 title: 'Успешная покупка',
                 input_message_content: {
-                    message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}\nВаши покупки:\n${products.map((item) => {
+                    message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}\nВаши покупки:\n${pizzas.map((item) => {
+                        pizzaArray.push(item);
                         return `\n🍕  ${item.type}`;
                     })}, \n\nчтобы указать данные и узнать через сколько прибудет ваш заказ,нажмите на кнопку с изображением 4 точек внизу в поле ввода сообщения и  нажмите на кнопку "заполнить форму"`,
                 },
@@ -98,14 +98,14 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 },
             });
         }
-        return res.status(200).json({ pizzas });
+        return res.status(200).json();
     }
     catch (e) {
         return res.status(500).json({ error: 'nothing send' });
     }
 }));
 app.get('/pizza', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.status(200).send({ pizzas });
+    res.status(200).send(pizzaArray);
 }));
 app.listen(8080, () => console.log(`server started on address http://localhost:8080`));
 const calcTime = (address) => __awaiter(void 0, void 0, void 0, function* () {
