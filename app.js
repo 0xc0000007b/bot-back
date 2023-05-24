@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = require("dotenv");
 const axios_1 = __importDefault(require("axios"));
+const timers_1 = require("timers");
 const Bot = require('node-telegram-bot-api');
 const express = require('express');
 (0, dotenv_1.config)();
@@ -96,41 +97,48 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 });
             }
             else {
-                yield bot.answerWebAppQuery({
-                    type: 'article',
-                    id: queryId,
-                    title: 'Успешная покупка',
-                    input_message_content: {
-                        message_text: ` подождите немного, курьер возвращается за вашим заказом... время ожидания ${setTimeout(() => +time - 1, 60000)} миут.
-            `,
-                    },
-                });
-            }
-            if (+time === 0) {
-                yield bot.answerWebAppQuery(queryId, {
-                    type: 'article',
-                    id: queryId,
-                    title: 'Успешная покупка',
-                    input_message_content: {
-                        message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}\nВаши покупки:\n${products.map((item) => {
-                            pizzaArray.push(item);
-                            return `\n🍕  ${item.type}`;
-                        })}, \n\nчтобы указать данные и узнать через сколько прибудет ваш заказ,нажмите на кнопку с изображением 4 точек внизу в поле ввода сообщения и  нажмите на кнопку "заполнить форму"`,
-                    },
-                    reply_markup: {
-                        inline_keyboard: [
-                            [{ text: 'перейти в магазин', web_app: { url: webApp } }],
-                        ],
-                    },
-                });
+                let waitTime = 10;
+                const waitInterval = setInterval(() => {
+                    waitTime--;
+                    if (waitTime > 0) {
+                        bot.answerWebAppQuery({
+                            type: 'article',
+                            id: queryId,
+                            title: 'Успешная покупка',
+                            input_message_content: {
+                                message_text: `Подождите немного, курьер возвращается за вашим заказом... Время ожидания ${waitTime} минут.`,
+                            },
+                        });
+                    }
+                    else {
+                        (0, timers_1.clearInterval)(waitInterval);
+                        bot.answerWebAppQuery(queryId, {
+                            type: 'article',
+                            id: queryId,
+                            title: 'Успешная покупка',
+                            input_message_content: {
+                                message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}\nВаши покупки:\n${products.map((item) => {
+                                    pizzaArray.push(item);
+                                    return `\n🍕  ${item.type}`;
+                                })}, \n\nчтобы указать данные и узнать через сколько прибудет ваш заказ,нажмите на кнопку с изображением 4 точек внизу в поле ввода сообщения и  нажмите на кнопку "заполнить форму"`,
+                            },
+                            reply_markup: {
+                                inline_keyboard: [
+                                    [{ text: 'перейти в магазин', web_app: { url: webApp } }],
+                                ],
+                            },
+                        });
+                    }
+                }, 60000);
             }
         }
         else {
-            yield bot.answerWebAppQuery(queryId, {
+            bot.answerWebAppQuery(queryId, {
                 type: 'article',
+                title: 'неудача',
                 id: queryId,
                 input_message_content: {
-                    message_text: 'Неудалось купить товары, попробуйте снова',
+                    message_text: 'неудалось совершить покупку.так как покупка не может быть совершена на сумму 0',
                 },
             });
         }
