@@ -97,7 +97,7 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 });
             }
             else {
-                let waitTime = 10;
+                let waitTime = 10; // начальное время ожидания
                 const waitInterval = setInterval(() => {
                     waitTime--;
                     if (waitTime > 0) {
@@ -111,7 +111,6 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                         });
                     }
                     else {
-                        (0, timers_1.clearInterval)(waitInterval);
                         bot.answerWebAppQuery(queryId, {
                             type: 'article',
                             id: queryId,
@@ -128,12 +127,13 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                                 ],
                             },
                         });
+                        (0, timers_1.clearInterval)(waitInterval);
                     }
                 }, 60000);
             }
         }
         else {
-            bot.answerWebAppQuery(queryId, {
+            yield bot.answerWebAppQuery(queryId, {
                 type: 'article',
                 title: 'неудача',
                 id: queryId,
