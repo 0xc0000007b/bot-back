@@ -187,7 +187,7 @@ const createDb = () => __awaiter(void 0, void 0, void 0, function* () {
         database: 'freedb_test-bot',
         dropSchema: false,
         entities: [Pizza, Topping],
-        synchronize: true,
+        synchronize: false,
     });
 });
 let Pizza = class Pizza extends typeorm_1.BaseEntity {
