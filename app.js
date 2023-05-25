@@ -130,8 +130,8 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 }));
 app.get('/pizza', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(pizzaArray + ' response');
     const pizzas = yield Pizza.find();
+    console.log(pizzas + ' response');
     res.status(200).send(pizzas);
 }));
 app.listen(8080, () => console.log(`server started on address http://localhost:8080`));
