@@ -69,10 +69,9 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
 }));
 app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { queryId, pizzas, totalPrice } = req.body;
-    console.log(pizzas + ' callback from frontend');
     console.log(pizzaArray + ' pizza array before equaling');
-    pizzaArray.push(pizzas);
-    console.log(pizzaArray + ' pizza array after equaling');
+    pizzaArray = pizzas;
+    console.log(pizzaArray + 'pizza array after pushing');
     try {
         if (totalPrice > 0) {
             yield bot.answerWebAppQuery(queryId, {
@@ -106,7 +105,7 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 },
             });
         }
-        return res.status(200).json(pizzaArray);
+        return res.status(200);
     }
     catch (e) {
         return res.status(500).json({ error: 'nothing send' });
