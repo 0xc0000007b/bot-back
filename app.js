@@ -79,14 +79,13 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     }
 }));
 app.get('/pizza', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const pizzas = yield Pizza.find();
+    const pizzas = yield Pizza.getRepository().find();
     console.log(pizzas + ' response');
     res.status(200).json({ pizzas }).send(pizzas);
 }));
 app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { queryId, pizzas, totalPrice } = req.body;
     console.log(pizzaArray + ' pizza array before equaling');
-    pizzaArray = pizzas;
     yield createDb();
     const pizza = new Pizza();
     console.log(pizzaArray + 'pizza array after pushing');
@@ -112,6 +111,7 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                     ],
                 },
             });
+            console.log((yield Pizza.getRepository().find()) + ' pizzas from database');
         }
         else {
             yield bot.answerWebAppQuery(queryId, {
