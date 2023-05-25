@@ -111,7 +111,9 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 }));
 app.get('/pizza', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    return res.status(200).json({ pizzas: pizzaArray });
+    return res.status(200).json(pizzaArray.map((item) => {
+        return { pizza: item };
+    }));
 }));
 app.listen(8080, () => console.log(`server started on address http://localhost:8080`));
 const calcTime = (address) => __awaiter(void 0, void 0, void 0, function* () {
