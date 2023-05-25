@@ -1,10 +1,4 @@
 "use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -18,10 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Topping = exports.Pizzas = void 0;
 const dotenv_1 = require("dotenv");
 const axios_1 = __importDefault(require("axios"));
-const typeorm_1 = require("typeorm");
 const Bot = require('node-telegram-bot-api');
 const express = require('express');
 (0, dotenv_1.config)();
@@ -77,8 +69,6 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
 }));
 app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { queryId, pizzas = [], totalPrice } = req.body;
-    pizzaArray = pizzas;
-    createDb();
     try {
         if (totalPrice > 0) {
             yield bot.answerWebAppQuery(queryId, {
@@ -87,14 +77,6 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 title: 'Успешная покупка',
                 input_message_content: {
                     message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}\nВаши покупки:\n${pizzas.map((item) => {
-                        const pizza = Pizzas.create({
-                            type: item.type,
-                            orderDate: item.orderDate,
-                            orderTime: item.orderTime,
-                            toppings: item.toppings,
-                            image: item.image,
-                        });
-                        Pizzas.save(pizza);
                         pizzaArray.push(item);
                         return `\n🍕  ${item.type}`;
                     })}, \n\nчтобы указать данные и узнать через сколько прибудет ваш заказ,нажмите на кнопку с изображением 4 точек внизу в поле ввода сообщения и  нажмите на кнопку "заполнить форму"`,
@@ -123,8 +105,7 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 }));
 app.get('/pizza', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const pizzas = yield Pizzas.find();
-    return res.status(200).send(pizzas);
+    return res.status(200).send(pizzaArray);
 }));
 app.listen(8080, () => console.log(`server started on address http://localhost:8080`));
 const calcTime = (address) => __awaiter(void 0, void 0, void 0, function* () {
@@ -171,53 +152,3 @@ const calcTime = (address) => __awaiter(void 0, void 0, void 0, function* () {
         .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     return formattedDuration;
 });
-const createDb = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, typeorm_1.createConnection)({
-        type: 'mysql',
-        host: 'sql.freedb.tech',
-        port: 3306,
-        database: 'freedb_test-bot',
-        username: 'freedb_test-bot',
-        password: 'q456sV$Vs99*paV',
-        dropSchema: false,
-        synchronize: true,
-        entities: [Pizzas, Topping],
-    });
-});
-let Pizzas = class Pizzas extends typeorm_1.BaseEntity {
-};
-__decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)()
-], Pizzas.prototype, "id", void 0);
-__decorate([
-    (0, typeorm_1.Column)()
-], Pizzas.prototype, "type", void 0);
-__decorate([
-    (0, typeorm_1.Column)()
-], Pizzas.prototype, "orderDate", void 0);
-__decorate([
-    (0, typeorm_1.Column)()
-], Pizzas.prototype, "orderTime", void 0);
-__decorate([
-    (0, typeorm_1.ManyToMany)(() => Topping),
-    (0, typeorm_1.JoinTable)()
-], Pizzas.prototype, "toppings", void 0);
-__decorate([
-    (0, typeorm_1.Column)()
-], Pizzas.prototype, "image", void 0);
-Pizzas = __decorate([
-    (0, typeorm_1.Entity)('pizzas')
-], Pizzas);
-exports.Pizzas = Pizzas;
-let Topping = class Topping extends typeorm_1.BaseEntity {
-};
-__decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)()
-], Topping.prototype, "id", void 0);
-__decorate([
-    (0, typeorm_1.Column)()
-], Topping.prototype, "type", void 0);
-Topping = __decorate([
-    (0, typeorm_1.Entity)()
-], Topping);
-exports.Topping = Topping;
