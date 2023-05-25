@@ -79,12 +79,8 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     }
 }));
 app.get('/pizza', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield Pizza.getRepository().find();
-    return res.json(response);
-}));
-app.get('/pizzas', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const pizzas = yield Pizza.find();
-    res.status(200).json(pizzas);
+    const response = yield Pizza.find();
+    res.json(response);
 }));
 app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { queryId, pizzas, totalPrice } = req.body;
