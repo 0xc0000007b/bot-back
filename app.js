@@ -5,6 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -80,6 +83,10 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     console.log(pizzaArray + ' pizza array before equaling');
     pizzaArray = pizzas;
     yield createDb();
+    const pizza = new Pizza();
+    yield pizza.save({
+        data: pizzas,
+    });
     console.log(pizzaArray + 'pizza array after pushing');
     try {
         if (totalPrice > 0) {
@@ -89,12 +96,6 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 title: 'Успешная покупка',
                 input_message_content: {
                     message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}\nВаши покупки:\n${pizzas.map((item) => {
-                        const pizza = new Pizza();
-                        pizza.type = item.type;
-                        pizza.orderDate = item.orderDate;
-                        pizza.orderTime = item.orderTime;
-                        pizza.toppings = item.toppings;
-                        pizza.save();
                         return `\n🍕  ${item.type}`;
                     })}, \n\nчтобы указать данные и узнать через сколько прибудет ваш заказ,нажмите на кнопку с изображением 4 точек внизу в поле ввода сообщения и  нажмите на кнопку "заполнить форму"`,
                 },
@@ -191,20 +192,25 @@ const createDb = () => __awaiter(void 0, void 0, void 0, function* () {
 let Pizza = class Pizza extends typeorm_1.BaseEntity {
 };
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)()
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
 ], Pizza.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)()
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
 ], Pizza.prototype, "type", void 0);
 __decorate([
-    (0, typeorm_1.Column)()
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
 ], Pizza.prototype, "orderDate", void 0);
 __decorate([
-    (0, typeorm_1.Column)()
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
 ], Pizza.prototype, "orderTime", void 0);
 __decorate([
     (0, typeorm_1.ManyToMany)(() => Topping),
-    (0, typeorm_1.JoinTable)()
+    (0, typeorm_1.JoinTable)(),
+    __metadata("design:type", Array)
 ], Pizza.prototype, "toppings", void 0);
 Pizza = __decorate([
     (0, typeorm_1.Entity)()
@@ -213,10 +219,12 @@ exports.Pizza = Pizza;
 let Topping = class Topping extends typeorm_1.BaseEntity {
 };
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)()
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
 ], Topping.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)()
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
 ], Topping.prototype, "type", void 0);
 Topping = __decorate([
     (0, typeorm_1.Entity)()
