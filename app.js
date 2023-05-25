@@ -79,7 +79,8 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     }
 }));
 app.get('/pizza', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.status(200).json(yield Pizza.getRepository().find());
+    const response = yield Pizza.getRepository().find();
+    res.status(200).json(response);
 }));
 app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { queryId, pizzas, totalPrice } = req.body;
