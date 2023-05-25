@@ -25,7 +25,7 @@ const webAppForm = 'https://web-tg-app.netlify.app/form';
 const app = express();
 app.use(cors());
 app.use(express.json());
-let pizzaArray;
+let pizzaArray = [];
 bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     const chatId = msg.chat.id;
