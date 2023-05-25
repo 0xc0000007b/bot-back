@@ -25,6 +25,7 @@ exports.Topping = exports.Pizza = void 0;
 const dotenv_1 = require("dotenv");
 const axios_1 = __importDefault(require("axios"));
 const typeorm_1 = require("typeorm");
+const dataSource_1 = require("./dataSource");
 const Bot = require('node-telegram-bot-api');
 const express = require('express');
 (0, dotenv_1.config)();
@@ -173,6 +174,11 @@ const calcTime = (address) => __awaiter(void 0, void 0, void 0, function* () {
         .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     return formattedDuration;
 });
+app.get('/', (res, req) => __awaiter(void 0, void 0, void 0, function* () {
+    Pizza.useDataSource(dataSource_1.AppDataSource);
+    const pizzas = yield Pizza.find();
+    res.json(pizzas);
+}));
 const createDb = () => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, typeorm_1.createConnection)({
         type: 'mysql',
@@ -183,13 +189,9 @@ const createDb = () => __awaiter(void 0, void 0, void 0, function* () {
         database: 'freedb_test-bot',
         dropSchema: false,
         entities: [Pizza, Topping],
-        synchronize: false,
+        synchronize: true,
     });
 });
-app.get('/', (res, req) => __awaiter(void 0, void 0, void 0, function* () {
-    const pizzas = yield Pizza.find();
-    res.json(pizzas);
-}));
 let Pizza = class Pizza extends typeorm_1.BaseEntity {
 };
 __decorate([
