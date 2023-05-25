@@ -75,7 +75,7 @@ bot.on('message', async (msg: Message) => {
 });
 
 app.post('/web-data', async (req, res) => {
-  const { queryId, pizzas, totalPrice } = req.body;
+  const { queryId, pizzas = [], totalPrice } = req.body;
   console.log(pizzaArray + ' pizza array before equaling');
   pizzaArray = pizzas;
   console.log(pizzaArray + ' pizza array after equaling');
