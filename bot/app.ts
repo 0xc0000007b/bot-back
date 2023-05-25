@@ -4,6 +4,8 @@ import { Request, Response } from 'express';
 
 import axios from 'axios';
 import {BaseEntity, Column, createConnection, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {Pizza} from "./entities/Pizza";
+import {Topping} from "./entities/Topping";
 
 const Bot = require('node-telegram-bot-api');
 const express = require('express');
@@ -227,24 +229,4 @@ export interface PizzaInterface {
 
 
 
-@Entity()
-export class Pizza extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
-  @Column({ default: '' })
-  type: string;
-  @Column({ default: '' })
-  orderDate: string;
-  @Column({ default: '' })
-  orderTime: string;
-  @ManyToMany(() => Topping)
-  @JoinTable()
-  toppings: Topping[];
-}
-@Entity()
-export class Topping extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
-  @Column()
-  type: string;
-}
+
