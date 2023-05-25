@@ -186,10 +186,9 @@ const createDb = () => __awaiter(void 0, void 0, void 0, function* () {
         synchronize: false,
     });
 });
-app.get('/pizza', () => __awaiter(void 0, void 0, void 0, function* () {
-    const pizzas = yield Pizza.getRepository().find();
-    pizzaArray.push(...pizzas);
-    return pizzaArray;
+app.get('/', (res) => __awaiter(void 0, void 0, void 0, function* () {
+    const pizzas = yield Pizza.find();
+    res.json(pizzas);
 }));
 let Pizza = class Pizza extends typeorm_1.BaseEntity {
 };
