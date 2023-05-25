@@ -2,8 +2,8 @@ import { Message } from 'node-telegram-bot-api';
 import { config } from 'dotenv';
 import { Request, Response } from 'express';
 
-import axios from 'axios';
-import {BaseEntity, Column, createConnection, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn} from 'typeorm';
+const axios = require('axios')
+import { createConnection} from 'typeorm';
 import {Pizza} from "./entities/Pizza";
 import {Topping} from "./entities/Topping";
 
