@@ -9,7 +9,7 @@ export const AppDataSource = new DataSource({
   password: 'q456sV$Vs99*paV',
   database: 'freedb_test-bot',
   dropSchema: false,
-  synchronize: true,
+  synchronize: false,
   entities: [Pizza, Topping],
 });
 

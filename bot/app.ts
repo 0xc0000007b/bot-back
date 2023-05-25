@@ -228,7 +228,7 @@ const createDb = async () => {
     database: 'freedb_test-bot',
     dropSchema: false,
     entities: [Pizza, Topping],
-    synchronize: true,
+    synchronize: false,
   });
 };
 
