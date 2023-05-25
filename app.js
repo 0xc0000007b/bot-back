@@ -68,11 +68,11 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     }
 }));
 app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { queryId, pizzas = [], totalPrice } = req.body;
-    console.log(pizzas + ' callback from frontend');
-    console.log(pizzaArray + ' pizza array before equaling');
-    pizzaArray = pizzas;
-    console.log(pizzaArray + ' pizza array after equaling');
+    const { queryId, pizzas, totalPrice } = req.body;
+    console.log(...(pizzas + ' callback from frontend'));
+    console.log(...(pizzaArray + ' pizza array before equaling'));
+    pizzaArray.push(...pizzas);
+    console.log(...(pizzaArray + ' pizza array after equaling'));
     try {
         if (totalPrice > 0) {
             yield bot.answerWebAppQuery(queryId, {
@@ -114,7 +114,7 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
 }));
 app.get('/pizza', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(pizzaArray);
-    res.status(200).send(pizzaArray);
+    res.status(200).send(...pizzaArray);
 }));
 app.listen(8080, () => console.log(`server started on address http://localhost:8080`));
 const calcTime = (address) => __awaiter(void 0, void 0, void 0, function* () {
