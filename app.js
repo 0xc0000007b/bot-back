@@ -184,6 +184,7 @@ const createDb = () => __awaiter(void 0, void 0, void 0, function* () {
         port: 3306,
         username: 'freedb_test-bot',
         password: 'q456sV$Vs99*paV',
+        database: 'freedb_test-bot',
         dropSchema: false,
         entities: [Pizza, Topping],
         synchronize: true,
