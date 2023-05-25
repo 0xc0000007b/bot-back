@@ -128,7 +128,11 @@ app.post('/web-data', async (req, res) => {
     return res.status(500).json({ error: 'nothing send' });
   }
 });
-
+app.get('/', async (res: Response, req: Request) => {
+  await createDb();
+  const pizzas = await Pizza.getRepository().find();
+  return res.status(200).json(pizzas);
+});
 app.listen(8080, () =>
   console.log(`server started on address http://localhost:8080`)
 );
@@ -196,11 +200,7 @@ const calcTime = async (address: string) => {
 interface ToppingInterface {
   type: string;
 }
-app.get('/', async (res: Response, req: Request) => {
-  await createDb();
-  const pizzas = await Pizza.getRepository().find();
-  return res.status(200).json(pizzas);
-});
+
 
 export interface PizzaInterface {
   type: string;
