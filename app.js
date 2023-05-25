@@ -25,7 +25,7 @@ const webAppForm = 'https://web-tg-app.netlify.app/form';
 const app = express();
 app.use(cors());
 app.use(express.json());
-let pizzaArray;
+let pizzaArray = [];
 bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     const chatId = msg.chat.id;
@@ -69,7 +69,7 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
 }));
 app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { queryId, pizzas = [], totalPrice } = req.body;
-    pizzaArray = pizzas;
+    pizzaArray = [...pizzas];
     try {
         if (totalPrice > 0) {
             yield bot.answerWebAppQuery(queryId, {
@@ -111,7 +111,7 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 }));
 app.get('/pizza', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    return res.status(200).send(pizzaArray);
+    return res.status(200).json({ pizzas: pizzaArray });
 }));
 app.listen(8080, () => console.log(`server started on address http://localhost:8080`));
 const calcTime = (address) => __awaiter(void 0, void 0, void 0, function* () {
