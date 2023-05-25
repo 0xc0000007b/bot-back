@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { Pizza, Topping } from '../app';
+import { Pizza, Topping } from './app';
 
 export const AppDataSource = new DataSource({
   type: 'mysql',
