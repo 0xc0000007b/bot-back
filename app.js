@@ -68,7 +68,7 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
     }
 }));
 app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { queryId, pizzas, totalPrice } = req.body;
+    const { queryId, pizzas = [], totalPrice } = req.body;
     console.log(pizzaArray + ' pizza array before pushing');
     pizzaArray.push(...pizzas);
     console.log(pizzaArray + 'pizza array after pushing');

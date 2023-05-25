@@ -17,7 +17,7 @@ const webAppForm: string = 'https://web-tg-app.netlify.app/form';
 const app = express();
 app.use(cors());
 app.use(express.json());
-let pizzaArray = [];
+let pizzaArray: PizzaInterface[] = [];
 
 bot.on('message', async (msg: Message) => {
   const chatId: number = msg.chat.id;
@@ -76,9 +76,9 @@ bot.on('message', async (msg: Message) => {
 
 app.post('/web-data', async (req, res) => {
   const { queryId, pizzas, totalPrice } = req.body;
-  console.log(pizzaArray + ' pizza array before pushing');
-  pizzaArray.push(...pizzas);
-  console.log(pizzaArray + 'pizza array after pushing');
+  console.log(pizzaArray + ' pizza array before equaling');
+  pizzaArray = pizzas;
+  console.log(pizzaArray + ' pizza array after equaling');
   try {
     if (totalPrice > 0) {
       await bot.answerWebAppQuery(queryId, {
@@ -187,3 +187,14 @@ const calcTime = async (address: string) => {
     .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   return formattedDuration;
 };
+
+interface ToppingInterface {
+  type: string;
+}
+
+export interface PizzaInterface {
+  type: string;
+  orderDate: string;
+  orderTime: string;
+  toppings: ToppingInterface[];
+}
