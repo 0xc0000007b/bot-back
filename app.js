@@ -82,6 +82,10 @@ app.get('/pizza', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield Pizza.getRepository().find();
     return res.json(response);
 }));
+app.get('/pizzas', (req, res) => {
+    const pizzas = Pizza.getRepository().find();
+    return pizzas;
+});
 app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { queryId, pizzas, totalPrice } = req.body;
     yield createDb();
