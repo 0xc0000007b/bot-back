@@ -206,7 +206,6 @@ interface ToppingInterface {
   type: string;
 }
 app.get('/', async (res: Response, req: Request) => {
-  Pizza.useDataSource(AppDataSource);
   const pizzas = await Pizza.find();
   res.json(pizzas);
 });
