@@ -71,7 +71,7 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const { queryId, pizzas, totalPrice } = req.body;
     console.log(pizzas + ' callback from frontend');
     console.log(pizzaArray + ' pizza array before equaling');
-    pizzaArray.push(...pizzas);
+    pizzaArray.push(JSON.parse(pizzas));
     console.log(pizzaArray + ' pizza array after equaling');
     try {
         if (totalPrice > 0) {
