@@ -19,6 +19,23 @@ app.use(cors());
 app.use(express.json());
 let pizzaArray: PizzaInterface[] = [];
 
+const createDb = async () => {
+  await createConnection({
+    type: 'mysql',
+    host: 'sql.freedb.tech',
+    port: 3306,
+    username: 'freedb_test-bot',
+    password: 'q456sV$Vs99*paV',
+    database: 'freedb_test-bot',
+    dropSchema: false,
+    entities: [Pizza, Topping],
+    synchronize: false,
+  });
+};
+
+createDb()
+
+
 bot.on('message', async (msg: Message) => {
   const chatId: number = msg.chat.id;
   const message: string | unknown = msg.text;
@@ -77,7 +94,7 @@ bot.on('message', async (msg: Message) => {
 app.post('/web-data', async (req, res) => {
   const { queryId, pizzas, totalPrice } = req.body;
 
-  await createDb();
+
   const pizza = new Pizza();
 
   console.log(pizzaArray + 'pizza array after pushing');
@@ -129,7 +146,6 @@ app.post('/web-data', async (req, res) => {
   }
 });
 app.get('/', async (res: Response, req: Request) => {
-  await createDb();
   const pizzas = await Pizza.getRepository().find();
   return pizzas
 });
@@ -209,19 +225,7 @@ export interface PizzaInterface {
   toppings: ToppingInterface[];
 }
 
-const createDb = async () => {
-  await createConnection({
-    type: 'mysql',
-    host: 'sql.freedb.tech',
-    port: 3306,
-    username: 'freedb_test-bot',
-    password: 'q456sV$Vs99*paV',
-    database: 'freedb_test-bot',
-    dropSchema: false,
-    entities: [Pizza, Topping],
-    synchronize: false,
-  });
-};
+
 
 @Entity()
 export class Pizza extends BaseEntity {
