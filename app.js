@@ -83,7 +83,7 @@ app.get('/pizza', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     return res.json(response);
 }));
 app.get('/pizzas', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const pizzas = yield Pizza.getRepository().find();
+    const pizzas = yield Pizza.find();
     res.status(200).json(pizzas);
 }));
 app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
