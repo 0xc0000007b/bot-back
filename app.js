@@ -69,6 +69,7 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
 }));
 app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { queryId, pizzas = [], totalPrice } = req.body;
+    console.log(pizzas + ' callback from frontend');
     console.log(pizzaArray + ' pizza array before equaling');
     pizzaArray = pizzas;
     console.log(pizzaArray + ' pizza array after equaling');
@@ -105,7 +106,7 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 },
             });
         }
-        return res.status(200);
+        return res.status(200).json(pizzaArray);
     }
     catch (e) {
         return res.status(500).json({ error: 'nothing send' });
