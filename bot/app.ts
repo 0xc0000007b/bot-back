@@ -150,7 +150,7 @@ app.post('/web-data', async (req, res) => {
 app.get('/pizz', async (res: Response, req: Request) => {
   const pizzas = await Pizza.getRepository().find();
   console.log(pizzas)
-  return res.status(200).json(pizzas)
+  return pizzas
 });
 app.listen(8080, () =>
   console.log(`server started on address http://localhost:8080`)
