@@ -105,7 +105,7 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 },
             });
         }
-        return res.status(200).json(...pizzaArray);
+        return res.status(200).json(...pizzas);
     }
     catch (e) {
         return res.status(500).json({ error: 'nothing send' });
