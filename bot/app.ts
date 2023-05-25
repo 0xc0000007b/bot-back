@@ -206,7 +206,8 @@ interface ToppingInterface {
   type: string;
 }
 app.get('/', async (res: Response, req: Request) => {
-  const pizzas = await Pizza.find();
+  await createDb();
+  const pizzas = await Pizza.getRepository().find();
   res.status(200).json(pizzas);
 });
 
