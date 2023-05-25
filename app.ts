@@ -17,7 +17,7 @@ const webAppForm: string = 'https://web-tg-app.netlify.app/form';
 const app = express();
 app.use(cors());
 app.use(express.json());
-let pizzaArray: PizzaInterface[] = [];
+let pizzaArray = [];
 
 bot.on('message', async (msg: Message) => {
   const chatId: number = msg.chat.id;
@@ -187,14 +187,3 @@ const calcTime = async (address: string) => {
     .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   return formattedDuration;
 };
-
-interface ToppingInterface {
-  type: string;
-}
-
-export interface PizzaInterface {
-  type: string;
-  orderDate: string;
-  orderTime: string;
-  toppings: ToppingInterface[];
-}

@@ -112,6 +112,7 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 }));
 app.get('/pizza', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(pizzaArray);
     res.status(200).send(pizzaArray);
 }));
 app.listen(8080, () => console.log(`server started on address http://localhost:8080`));
