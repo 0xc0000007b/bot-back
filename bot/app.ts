@@ -131,7 +131,7 @@ app.post('/web-data', async (req, res) => {
 app.get('/', async (res: Response, req: Request) => {
   await createDb();
   const pizzas = await Pizza.getRepository().find();
-  return res.status(200).json(pizzas);
+  return pizzas
 });
 app.listen(8080, () =>
   console.log(`server started on address http://localhost:8080`)
