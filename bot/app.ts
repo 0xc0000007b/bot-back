@@ -3,16 +3,7 @@ import { config } from 'dotenv';
 import { Request, Response } from 'express';
 
 import axios from 'axios';
-import {
-  BaseEntity,
-  Column,
-  createConnection,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { AppDataSource } from './dataSource';
+import {BaseEntity, Column, createConnection, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn} from 'typeorm';
 
 const Bot = require('node-telegram-bot-api');
 const express = require('express');
