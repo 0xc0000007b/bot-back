@@ -69,7 +69,9 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
 }));
 app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { queryId, pizzas = [], totalPrice } = req.body;
-    pizzaArray = [...pizzas];
+    pizzaArray.forEach((item) => {
+        pizzaArray.push(item);
+    });
     try {
         if (totalPrice > 0) {
             yield bot.answerWebAppQuery(queryId, {
@@ -78,7 +80,6 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 title: 'Успешная покупка',
                 input_message_content: {
                     message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}\nВаши покупки:\n${pizzas.map((item) => {
-                        pizzaArray.push(item);
                         return `\n🍕  ${item.type}`;
                     })}, \n\nчтобы указать данные и узнать через сколько прибудет ваш заказ,нажмите на кнопку с изображением 4 точек внизу в поле ввода сообщения и  нажмите на кнопку "заполнить форму"`,
                 },
@@ -111,9 +112,7 @@ app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 }));
 app.get('/pizza', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    return res.status(200).json(pizzaArray.map((item) => {
-        return { pizza: item };
-    }));
+    res.status(200).send(pizzaArray);
 }));
 app.listen(8080, () => console.log(`server started on address http://localhost:8080`));
 const calcTime = (address) => __awaiter(void 0, void 0, void 0, function* () {
