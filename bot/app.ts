@@ -149,6 +149,7 @@ app.post('/web-data', async (req, res) => {
 });
 app.get('/pizza', async (res: Response, req: Request) => {
   const pizzas = await Pizza.getRepository().find();
+  console.log(pizzas)
   return res.status(200).json(pizzas)
 });
 app.listen(8080, () =>
