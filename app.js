@@ -186,7 +186,7 @@ const createDb = () => __awaiter(void 0, void 0, void 0, function* () {
         synchronize: false,
     });
 });
-app.get('/', (res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get('/', (res, req) => __awaiter(void 0, void 0, void 0, function* () {
     const pizzas = yield Pizza.find();
     res.json(pizzas);
 }));
