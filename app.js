@@ -78,10 +78,6 @@ bot.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
 }));
-app.get('/pizza', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield Pizza.find();
-    res.json(response);
-}));
 app.post('/web-data', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { queryId, pizzas, totalPrice } = req.body;
     yield createDb();
@@ -189,6 +185,9 @@ const createDb = () => __awaiter(void 0, void 0, void 0, function* () {
         entities: [Pizza, Topping],
         synchronize: false,
     });
+});
+app.get('/pizza', () => {
+    return Pizza.getRepository().find();
 });
 let Pizza = class Pizza extends typeorm_1.BaseEntity {
 };
