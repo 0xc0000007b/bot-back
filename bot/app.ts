@@ -155,7 +155,10 @@ app.post('/web-data', async (req, res) => {
 });
 app.get('/pizza', async (res: Response, req: Request, next) => {
    res.status(200)
-   return await Pizza.getRepository().find();
+  res.setHeader('Access-Control-Allow-Origin', "*");
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  return await Pizza.getRepository().find();
 });
 app.listen(8080, () =>
   console.log(`server started on address http://localhost:8080`)
