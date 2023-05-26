@@ -11,7 +11,15 @@ const Bot = require('node-telegram-bot-api');
 const express = require('express');
 config();
 const cors = require('cors');
-
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST'],
+  allowedHeaders: {
+    'Access-Control-Allow-Origin': '*'
+  },
+  optionsSuccessStatus: 200,
+  preflightContinue: false
+}))
 const token: unknown = process.env.TOKEN;
 const bot = new Bot(token, { polling: true });
 const webApp: string = 'https://web-tg-app.netlify.app';
@@ -160,15 +168,7 @@ app.get('/pizza', async (req: Request, res: Response, next) => {
   return res.json(pizzas);
   // return await Pizza.getRepository().find();
 });
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST'],
-  allowedHeaders: {
-    'Access-Control-Allow-Origin': '*'
-  },
-  optionsSuccessStatus: 200,
-  preflightContinue: false
-}))
+
 
 app.listen(8080, () =>
   console.log(`server started on address http://localhost:8080`)
