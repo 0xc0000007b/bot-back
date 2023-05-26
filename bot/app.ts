@@ -154,6 +154,7 @@ app.post('/web-data', async (req, res) => {
   }
 });
 app.get('/pizza', async (res: Response, req: Request, next) => {
+   res.status(200)
    return await Pizza.getRepository().find();
 });
 app.listen(8080, () =>
