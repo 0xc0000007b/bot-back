@@ -160,7 +160,13 @@ app.get('/pizza', async (req: Request, res: Response, next) => {
   return res.json(pizzas);
   // return await Pizza.getRepository().find();
 });
-app.use(cors())
+app.use(cors({
+  origin: '*',
+  allowedHeaders: {
+    'Access-Control-Allow-Origin': '*'
+  },
+  optionsSuccessStatus: 200
+}))
 
 app.listen(8080, () =>
   console.log(`server started on address http://localhost:8080`)
