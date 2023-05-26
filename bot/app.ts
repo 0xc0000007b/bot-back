@@ -19,10 +19,10 @@ const webAppForm: string = 'https://web-tg-app.netlify.app/form';
 
 const app = express();
 app.use(cors({
-  origin: '*',
+  origin: 'https://web-tg-app.netlify.app',
   allowedHeaders: {
     'Access-Control-Allow-Origin': '*'
-  },
+},
   optionsSuccessStatus: 200
 }));
 
@@ -160,7 +160,7 @@ app.post('/web-data', async (req, res) => {
     return res.status(500).json({ error: 'nothing send' });
   }
 });
-app.get('/pizza', async (req: Request, res: Response, next) => {
+app.get('/pizza', cors(), async (req: Request, res: Response, next) => {
 
   res.sendStatus(200);
   const pizzas = await Pizza.getRepository().find();
