@@ -19,9 +19,10 @@ const webAppForm: string = 'https://web-tg-app.netlify.app/form';
 
 const app = express();
 app.use(cors({
-  origin: 'https://web-tg-app.netlify.app',
+  origin: '*',
+  methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: {
-    'Access-Control-Allow-Origin': '*'
+    'Access-Control-Allow-Origin': '*',
 },
   optionsSuccessStatus: 200
 }));
@@ -99,12 +100,7 @@ bot.on('message', async (msg: Message) => {
     }
   }
 });
-var corsOptions = {
-  "origin": "*",
-  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-  "preflightContinue": false,
-  "optionsSuccessStatus": 204}
-app.use(express.json());
+
 
 app.post('/web-data', async (req, res) => {
   const { queryId, pizzas, totalPrice } = req.body;
@@ -160,7 +156,14 @@ app.post('/web-data', async (req, res) => {
     return res.status(500).json({ error: 'nothing send' });
   }
 });
-app.get('/pizza', cors(), async (req: Request, res: Response, next) => {
+app.get('/pizza', cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: {
+    'Access-Control-Allow-Origin': '*',
+  },
+  optionsSuccessStatus: 200
+}), async (req: Request, res: Response, next) => {
 
   res.sendStatus(200);
   const pizzas = await Pizza.getRepository().find();
