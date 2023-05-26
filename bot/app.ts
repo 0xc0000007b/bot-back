@@ -96,8 +96,8 @@ bot.on('message', async (msg: Message) => {
   }
 });
 
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 app.post('/web-data', async (req, res) => {
   const { queryId, pizzas, totalPrice } = req.body;
 
