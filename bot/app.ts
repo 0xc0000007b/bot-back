@@ -11,6 +11,13 @@ const Bot = require('node-telegram-bot-api');
 const express = require('express');
 config();
 const cors = require('cors');
+
+const token: unknown = process.env.TOKEN;
+const bot = new Bot(token, { polling: true });
+const webApp: string = 'https://web-tg-app.netlify.app';
+const webAppForm: string = 'https://web-tg-app.netlify.app/form';
+
+const app = express();
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST'],
@@ -20,13 +27,6 @@ app.use(cors({
   optionsSuccessStatus: 200,
   preflightContinue: false
 }))
-const token: unknown = process.env.TOKEN;
-const bot = new Bot(token, { polling: true });
-const webApp: string = 'https://web-tg-app.netlify.app';
-const webAppForm: string = 'https://web-tg-app.netlify.app/form';
-
-const app = express();
-
 
 let pizzaArray: PizzaInterface[] = [];
 
