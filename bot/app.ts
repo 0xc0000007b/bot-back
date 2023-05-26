@@ -98,7 +98,7 @@ var corsOptions = {
   "preflightContinue": false,
   "optionsSuccessStatus": 204}
 app.use(express.json());
-app.use(cors(corsOptions));
+
 app.post('/web-data', async (req, res) => {
   const { queryId, pizzas, totalPrice } = req.body;
 
@@ -153,13 +153,16 @@ app.post('/web-data', async (req, res) => {
     return res.status(500).json({ error: 'nothing send' });
   }
 });
-app.get('/pizza', async (res: Response, req: Request, next) => {
-   res.status(200)
+app.get('/pizza', async (req: Request, res: Response, next) => {
   res.setHeader('Access-Control-Allow-Origin', "*");
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-  return await Pizza.getRepository().find();
+  res.sendStatus(200);
+  const pizzas = await Pizza.getRepository().find();
+  return res.json(pizzas);
+  // return await Pizza.getRepository().find();
 });
+app.use(cors());
 app.listen(8080, () =>
   console.log(`server started on address http://localhost:8080`)
 );
