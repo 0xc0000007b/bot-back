@@ -18,6 +18,11 @@ const webApp: string = 'https://web-tg-app.netlify.app';
 const webAppForm: string = 'https://web-tg-app.netlify.app/form';
 
 const app = express();
+app.use(cors({
+  origin: '*',
+  allowedHeaders: '*',
+  optionsSuccessStatus: 200
+}));
 
 let pizzaArray: PizzaInterface[] = [];
 
@@ -154,15 +159,13 @@ app.post('/web-data', async (req, res) => {
   }
 });
 app.get('/pizza', async (req: Request, res: Response, next) => {
-  res.setHeader('Access-Control-Allow-Origin', "*");
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
   res.sendStatus(200);
   const pizzas = await Pizza.getRepository().find();
   return res.json(pizzas);
   // return await Pizza.getRepository().find();
 });
-app.use(cors());
+
 app.listen(8080, () =>
   console.log(`server started on address http://localhost:8080`)
 );
