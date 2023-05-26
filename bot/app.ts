@@ -21,8 +21,7 @@ const webApp: string = 'https://web-tg-app.netlify.app';
 const webAppForm: string = 'https://web-tg-app.netlify.app/form';
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+
 let pizzaArray: PizzaInterface[] = [];
 
 const createDb = async () => {
@@ -97,6 +96,8 @@ bot.on('message', async (msg: Message) => {
   }
 });
 
+app.use(cors());
+app.use(express.json());
 app.post('/web-data', async (req, res) => {
   const { queryId, pizzas, totalPrice } = req.body;
 
