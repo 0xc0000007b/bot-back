@@ -11,6 +11,10 @@ const Bot = require('node-telegram-bot-api');
 const express = require('express');
 config();
 const cors = require('cors');
+var corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 const token: unknown = process.env.TOKEN;
 const bot = new Bot(token, { polling: true });
 const webApp: string = 'https://web-tg-app.netlify.app';
@@ -147,9 +151,7 @@ app.post('/web-data', async (req, res) => {
     return res.status(500).json({ error: 'nothing send' });
   }
 });
-app.get('/pizza', async (res: Response, req: Request) => {
-
-
+app.get('/pizza', cors(corsOptions), async (res: Response, req: Request, next) => {
    return await Pizza.getRepository().find();
 });
 app.listen(8080, () =>
