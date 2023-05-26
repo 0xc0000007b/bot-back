@@ -18,7 +18,7 @@ const webApp: string = 'https://web-tg-app.netlify.app';
 const webAppForm: string = 'https://web-tg-app.netlify.app/form';
 
 const app = express();
-app.use(cors());
+
 
 let pizzaArray: PizzaInterface[] = [];
 
@@ -152,8 +152,7 @@ app.post('/web-data', async (req, res) => {
 
 app.get('/pizza', async (req: Request, res: Response, next) => {
   res.statusCode = 200;
-  res.setHeader('Content-Type', "application/json"); //В моем случае я получаю json
-  res.setHeader('Access-Control-Allow-Origin', "*"); //Либо конкретный хост (поддерживается группа в виде массива)
+   res.setHeader('Access-Control-Allow-Origin', "*"); //Либо конкретный хост (поддерживается группа в виде массива)
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); //Необходимые типы запросов
    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
 
