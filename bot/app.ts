@@ -158,7 +158,7 @@ app.post('/web-data', async (req, res) => {
   }
 });
 
-app.get('/pizza', async (req: Request, res: Response, next) => {
+app.get('/pizza', cors(), async (req: Request, res: Response, next) => {
   res.statusCode = 200;
    res.header('Access-Control-Allow-Origin', "*"); //Либо конкретный хост (поддерживается группа в виде массива)
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); //Необходимые типы запросов
