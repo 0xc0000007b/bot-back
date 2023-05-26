@@ -162,6 +162,7 @@ app.get('/pizza', async (req: Request, res: Response, next) => {
 });
 app.use(cors({
   origin: '*',
+  methods: ['GET', 'POST'],
   allowedHeaders: {
     'Access-Control-Allow-Origin': '*'
   },
