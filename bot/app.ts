@@ -152,9 +152,9 @@ app.post('/web-data', async (req, res) => {
 
 app.get('/pizza', async (req: Request, res: Response, next) => {
   res.statusCode = 200;
-   res.setHeader('Access-Control-Allow-Origin', "*"); //Либо конкретный хост (поддерживается группа в виде массива)
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); //Необходимые типы запросов
-   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+   res.header('Access-Control-Allow-Origin', "*"); //Либо конкретный хост (поддерживается группа в виде массива)
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); //Необходимые типы запросов
+   res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
 
   const pizzas = await Pizza.getRepository().find();
   return res.json(pizzas);
