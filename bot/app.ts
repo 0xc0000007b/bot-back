@@ -21,9 +21,7 @@ const app = express();
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST'],
-  allowedHeaders: {
-    'Access-Control-Allow-Origin': '*'
-  },
+  allowedHeaders: '*',
   optionsSuccessStatus: 200,
   preflightContinue: false
 }))
@@ -157,6 +155,7 @@ app.post('/web-data', async (req, res) => {
     return res.status(500).json({ error: 'nothing send' });
   }
 });
+
 
 app.get('/pizza', cors(), async (req: Request, res: Response, next) => {
   res.statusCode = 200;
