@@ -147,7 +147,7 @@ app.post('/web-data', async (req, res) => {
     return res.status(500).json({ error: 'nothing send' });
   }
 });
-app.get('/pizz', async (res: Response, req: Request) => {
+app.get('/pizza', async (res: Response, req: Request) => {
 
 
    return await Pizza.getRepository().find();
