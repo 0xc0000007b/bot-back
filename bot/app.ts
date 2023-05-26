@@ -101,7 +101,7 @@ bot.on('message', async (msg: Message) => {
     }
   }
 });
-
+app.options('*', cors())
 
 app.post('/web-data', async (req, res) => {
   const { queryId, pizzas, totalPrice } = req.body;
