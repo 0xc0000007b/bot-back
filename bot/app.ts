@@ -20,7 +20,9 @@ const webAppForm: string = 'https://web-tg-app.netlify.app/form';
 const app = express();
 app.use(cors({
   origin: '*',
-  allowedHeaders: '*',
+  allowedHeaders: {
+    'Access-Control-Allow-Origin': '*'
+  },
   optionsSuccessStatus: 200
 }));
 
