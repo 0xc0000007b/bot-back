@@ -12,7 +12,7 @@ const express = require('express');
 config();
 const cors = require('cors');
 var corsOptions = {
-  AccessControlAllowOrigin: '*',
+  origin: '*',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 const token: unknown = process.env.TOKEN;
