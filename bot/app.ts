@@ -99,9 +99,21 @@ bot.on('message', async (msg: Message) => {
     }
   }
 });
-app.options('*', cors())
+app.options('*', cors({
+  origin: '*',
+  methods: ['GET', 'POST'],
+  allowedHeaders: '*',
+  optionsSuccessStatus: 200,
+  preflightContinue: false
+}))
 
-app.post('/web-data', async (req, res) => {
+app.post('/web-data', cors({
+  origin: '*',
+  methods: ['GET', 'POST'],
+  allowedHeaders: '*',
+  optionsSuccessStatus: 200,
+  preflightContinue: false
+}),async (req, res) => {
   const { queryId, pizzas, totalPrice } = req.body;
 
 
@@ -157,7 +169,13 @@ app.post('/web-data', async (req, res) => {
 });
 
 
-app.get('/pizza', cors(), async (req: Request, res: Response, next) => {
+app.get('/pizza', cors(cors({
+  origin: '*',
+  methods: ['GET', 'POST'],
+  allowedHeaders: '*',
+  optionsSuccessStatus: 200,
+  preflightContinue: false
+}), async (req: Request, res: Response, next) => {
   res.statusCode = 200;
    res.header('Access-Control-Allow-Origin', "*"); //Либо конкретный хост (поддерживается группа в виде массива)
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); //Необходимые типы запросов
@@ -166,7 +184,7 @@ app.get('/pizza', cors(), async (req: Request, res: Response, next) => {
   const pizzas = await Pizza.getRepository().find();
   return res.json(pizzas);
   // return await Pizza.getRepository().find();
-});
+}));
 
 
 app.listen(8080, () =>
