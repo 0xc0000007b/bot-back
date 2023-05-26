@@ -166,7 +166,7 @@ app.use(cors({
     'Access-Control-Allow-Origin': '*'
   },
   optionsSuccessStatus: 200,
-  preflightContinue: true
+  preflightContinue: false
 }))
 
 app.listen(8080, () =>
