@@ -18,14 +18,7 @@ const webApp: string = 'https://web-tg-app.netlify.app';
 const webAppForm: string = 'https://web-tg-app.netlify.app/form';
 
 const app = express();
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: {
-    'Access-Control-Allow-Origin': '*',
-},
-  optionsSuccessStatus: 200
-}));
+app.use(cors());
 
 let pizzaArray: PizzaInterface[] = [];
 
@@ -157,22 +150,18 @@ app.post('/web-data', async (req, res) => {
   }
 });
 
-app.get('/pizza', cors({
-  origin: 'https://web-tg-app.netlify.app',
-  methods: ['GET', 'POST', 'OPTIONS'],
+app.get('/pizza', async (req: Request, res: Response, next) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', "application/json"); //В моем случае я получаю json
+  res.setHeader('Access-Control-Allow-Origin', "*"); //Либо конкретный хост (поддерживается группа в виде массива)
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); //Необходимые типы запросов
+   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
 
-  allowedHeaders: {
-    'Access-Control-Allow-Origin': '*',
-  },
-  optionsSuccessStatus: 200
-}), async (req: Request, res: Response, next) => {
-  const xhr = new XMLHttpRequest()
-  xhr.send()
-  res.sendStatus(200);
   const pizzas = await Pizza.getRepository().find();
   return res.json(pizzas);
   // return await Pizza.getRepository().find();
 });
+app.use(cors())
 
 app.listen(8080, () =>
   console.log(`server started on address http://localhost:8080`)
