@@ -165,7 +165,8 @@ app.use(cors({
   allowedHeaders: {
     'Access-Control-Allow-Origin': '*'
   },
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
+  preflightContinue: true
 }))
 
 app.listen(8080, () =>
