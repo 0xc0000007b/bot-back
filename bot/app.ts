@@ -156,15 +156,18 @@ app.post('/web-data', async (req, res) => {
     return res.status(500).json({ error: 'nothing send' });
   }
 });
+
 app.get('/pizza', cors({
-  origin: '*',
+  origin: 'https://web-tg-app.netlify.app',
   methods: ['GET', 'POST', 'OPTIONS'],
+
   allowedHeaders: {
     'Access-Control-Allow-Origin': '*',
   },
   optionsSuccessStatus: 200
 }), async (req: Request, res: Response, next) => {
-
+  const xhr = new XMLHttpRequest()
+  xhr.send()
   res.sendStatus(200);
   const pizzas = await Pizza.getRepository().find();
   return res.json(pizzas);
